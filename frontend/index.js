@@ -4,7 +4,16 @@ function moduleProject3() {
 
   function buildNav(links) {
     //  ✨ do your magic here
-    return document.createElement('nav')
+    const container = document.createElement('nav')
+    links.forEach(link => {
+      let a = document.createElement('a')
+      a.href = link.href;
+      a.title = link.title;
+      a.textContent = link.textContent;
+      container.appendChild(a)
+
+    })
+    return container
   }
 
   // ❗ DOM creation using your `buildNav` component (do not change):
@@ -20,8 +29,35 @@ function moduleProject3() {
 
   function buildLearnerCard(learner, languages) {
     //  ✨ do your magic here
-  }
+    const card = document.createElement('div')
+    // card.textContent = 'WIP'
+    card.classList.add('learner-card')
+    const nameP = document.createElement('p');
+    nameP.textContent = learner.fullName;
 
+    const idEle = document.createElement('p');
+    idEle.textContent = `Learner ID: ${learner.id}`
+
+    const dobP = document.createElement('p')
+    dobP.textContent = `Date of Birth: ${learner.dateOfBirth}`
+
+    const favP = document.createElement('p')
+    const favLanguage = languages.find(lang => lang.id === learner.favLanguage)
+    favP.textContent = `Favorite Language: ${favLanguage.name}`;
+
+    [nameP, idEle, dobP, favP].forEach(p => {
+      card.appendChild(p)
+    })
+
+    card.addEventListener('click', evt => {
+      document.querySelectorAll('.learner-card').forEach(card => {
+        card.classList.remove('active')
+      })
+      card.classList.add('active')
+    })
+    return card
+  }
+  
   {
     // 👉 TASK 2B - Use the two variables below to make learner Cards, and put them in the DOM
 
@@ -40,13 +76,59 @@ function moduleProject3() {
       { id: 17, fullName: 'Daniel Castillo', dateOfBirth: '1995-11-05', favLanguage: 12 }
     ]
     //  ✨ do your magic here
+    learners.forEach(learner => {
+      const learnerCard = buildLearnerCard(learner, languages)
+      document.querySelector('section').appendChild(learnerCard)
+    })
   }
 
   // 👉 TASK 3 - Write a `buildFooter` component that returns a footer
 
   function buildFooter(footerData) {
     //  ✨ do your magic here
-    return document.createElement('footer')
+    const footer = document.createElement('footer')
+
+    const divInfo = document.createElement('div');
+    divInfo.classList.add('company-info')
+
+    const p1 = document.createElement('p');
+    p1.classList.add('company-name')
+    p1.textContent = footerData.companyName
+
+    const p2 = document.createElement('p');
+    p2.classList.add('address')
+    p2.textContent = footerData.address
+
+    const p3 = document.createElement('p');
+    p3.classList.add('contact-email')
+    p3.innerHTML = `Email: <a href="mailto:${footerData.contactEmail}"> ${footerData.contactEmail} </a>`
+
+    divInfo.appendChild(p1)
+    divInfo.appendChild(p2)
+    divInfo.appendChild(p3)
+
+   
+
+
+    const divMedia = document.createElement('div');
+    divMedia.classList.add('social-media')
+
+   for(let platform in footerData.socialMedia) {
+    let socialMedia = document.createElement('a')
+    socialMedia.href = footerData.socialMedia[platform]
+    socialMedia.textContent = `${platform.charAt(0).toUpperCase()}${platform.slice(1)}`
+    divMedia.appendChild(socialMedia)
+   }
+   
+   let currentYear = new Date().getFullYear();
+   let copyRight = document.createElement('div')
+   copyRight.textContent = `© ${footerData.companyName.toUpperCase()} ${currentYear}`
+
+   footer.appendChild(divInfo)
+   footer.appendChild(divMedia)
+   footer.appendChild(copyRight)
+
+    return footer
   }
 
   // ❗ DOM creation using your `buildFooter` component (do not change):
@@ -64,6 +146,12 @@ function moduleProject3() {
   // 👉 TASK 4 - Clicking on the section should deactivate the active card
 
   //  ✨ do your magic here
+  document.addEventListener('click', evt => {
+    if(evt.target === document.querySelector('section')) {
+      const learners = document.querySelectorAll('.learner-card')
+      learners.forEach(card => card.classList.remove('active'))
+    }
+  })
 }
 
 // ❗ DO NOT CHANGE THIS CODE
